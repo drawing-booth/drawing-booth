@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useLayoutEffect, useCallback } from 'react';
 
 import PermissionDenied from './PermissionDenied';
 
@@ -35,19 +35,13 @@ export const CaptureContainer = ({
     const [reverse, setReverse] = useState(drawningStore.isReverse);
     const classes = useStyles();
 
-    useEffect(() => {
-        const dispose = autorun(() => {
-            const { current: ctx } = contextRef;
-            if (drawningStore.isReverse !== reverse) {
-                if (ctx) {
-                    ctx.translate(width, 0);
-                    ctx.scale(-1, 1);
-                }
-                setReverse(drawningStore.isReverse);
-            }
-        });
-        return () => dispose();
-    }, [height, width, reverse]);
+    const applyReverse = useCallback(() => {
+        const { current: ctx } = contextRef;
+        if (ctx) {
+            ctx.translate(width, 0);
+            ctx.scale(-1, 1);
+        }
+    }, [width]);
 
     useEffect(() => {
 
@@ -76,8 +70,12 @@ export const CaptureContainer = ({
                     const ctx = canvas.getContext('2d')!;
                     contextRef.current = ctx;
 
+                    if (reverse && width !== 0 && height !== 0) {
+                        ctx.translate(width, 0);
+                        ctx.scale(-1, 1);
+                    }
+
                     const loop = () => {
-                        console.log('loop')
                         if (stream.active) {
                             ctx.clearRect(0, 0, width, height);
                             ctx.drawImage(video, 0, 0, width, height);
@@ -104,6 +102,16 @@ export const CaptureContainer = ({
             }
         }
     }, [height, width]);
+
+    useLayoutEffect(() => {
+        const dispose = autorun(() => {
+            if (drawningStore.isReverse !== reverse) {
+                setReverse(drawningStore.isReverse);
+                applyReverse();
+            }
+        });
+        return () => dispose();
+    }, [applyReverse, reverse]);
 
     return !permissionDenied ? (
         <canvas

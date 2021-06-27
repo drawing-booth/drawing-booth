@@ -76,6 +76,9 @@ export class DrawningStore extends StateManagerWrapper {
         });
         enableLogging(this, LOG_KEY, LOG_TOTAL);
         this.restoreChanges();
+        window.addEventListener("beforeunload", () => {
+            this.flushChanges();
+        }, false);
     }
 
     setIsHeaderCollapsed(isHeaderCollapsed: boolean) {
