@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core';
+
+import preventTouchBehaviour from '../../utils/preventTouchBehaviour';
 
 import { inject, observer } from "mobx-react";
 import compose from "compose-function";
@@ -25,6 +27,7 @@ export const DrawningPage = ({
     drawningStore,
 }: IDrawningPageProps) => {
     const classes = useStyles();
+    const elementRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         drawningStore.setIsHeaderCollapsed(false);
@@ -33,8 +36,16 @@ export const DrawningPage = ({
         };
     }, []);
 
+    useEffect(() => {
+        const { current: element } = elementRef;
+        if (element) {
+            const dispose = preventTouchBehaviour(element);
+            return () => dispose();
+        }
+    }, []);
+
     return (
-        <div className={classes.root}>
+        <div ref={elementRef} className={classes.root}>
             <Capture />
             <Fade />
             <Drawning />

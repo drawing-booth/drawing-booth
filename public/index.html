@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Drawning Booth</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Drawning Booth</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
+    *::-webkit-scrollbar {
+      display: none;
+    }
+    * {
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
 </html>
