@@ -22,13 +22,28 @@ import { makeStyles } from '@material-ui/core';
 
 import Logo from '../Logo';
 
+import { inject, observer } from "mobx-react";
+import compose from "compose-function";
+
+import DrawningStore from '../../../store/DrawningStore';
+
 const useStyles = makeStyles((theme) => ({
+    root: {},
+    noHeaderElevation: {
+        '& header.MuiPaper-root': {
+            boxShadow: 'none',
+        },
+    },
     stretch: {
         flexGrow: 1,
     },
-    appBar: {
+    appBarCollapsed: {
         background: theme.palette.background.paper,
         color: theme.palette.getContrastText(theme.palette.background.paper),
+    },
+    appBar: {
+        background: 'transparent',
+        color: 'white',
     },
     offset: theme.mixins.toolbar,
     hide: {
@@ -54,12 +69,17 @@ interface IScaffoldProps {
     style?: React.CSSProperties;
 }
 
+interface IScaffoldPrivate {
+    drawningStore: DrawningStore;
+}
+
 export const Scaffold = ({
     children,
     pages = [],
     className,
     style,
-}: IScaffoldProps) => {
+    drawningStore,
+}: IScaffoldProps & IScaffoldPrivate) => {
 
     const [opened, setOpened] = useState(false);
     const classes = useStyles();
@@ -74,7 +94,11 @@ export const Scaffold = ({
     };
 
     return (
-        <>
+        <div 
+            className={classNames(classes.root, {
+                [classes.noHeaderElevation]: !drawningStore.isHeaderCollapsed,
+            }, className)}
+        >
             <CssBaseline />
             <Drawer
                 open={opened}
@@ -101,7 +125,10 @@ export const Scaffold = ({
                 </List>
             </Drawer>
             <AppBar
-                className={classNames(classes.appBar, className)}
+                className={classNames({
+                    [classes.appBarCollapsed]: drawningStore.isHeaderCollapsed,
+                    [classes.appBar]: !drawningStore.isHeaderCollapsed,
+                })}
                 position="fixed"
                 style={style}
             >
@@ -121,16 +148,19 @@ export const Scaffold = ({
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Collapse in={true}>
+            <Collapse in={drawningStore.isHeaderCollapsed}>
                 <div className={classes.offset} />
             </Collapse>
             <div>
                 {children}
             </div>
-        </>
+        </div>
     );
 };
 
 Scaffold.displayName = 'Scaffold';
 
-export default Scaffold;
+export default compose(
+    inject(({ drawningStore }) => ({ drawningStore })),
+    observer,
+)(Scaffold) as React.ComponentType<IScaffoldProps>;

@@ -29,7 +29,7 @@ export const Logo = () => {
                 />
             </IconButton>
             <Typography>
-                HypeNet
+                DrawningBooth
             </Typography>
         </div>
     );
