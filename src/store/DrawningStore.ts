@@ -8,6 +8,8 @@ const STORAGE_KEY = "BOOTH_LAST_STATE";
 const STORAGE_FIELDS: string[] = [
     "fadeWidth",
     "isReverse",
+    "brushSize",
+    "brushColor",
 ];
 
 const LOG_KEY = "BOOTH_DRAWNING";
@@ -51,8 +53,10 @@ export class DrawningStore extends StateManagerWrapper {
      * и не сбрасываются при переключении между
      * страницами
      */
-    public fadeWidth = '300';
+    public fadeWidth = '450';
     public isReverse = false;
+    public brushSize = 'small';
+    public brushColor = 'green';
 
     /**
      * Параметры. Динамично меняются при переходе
@@ -69,12 +73,16 @@ export class DrawningStore extends StateManagerWrapper {
             setIsDrawningBlocked: action.bound,
             setIsHeaderCollapsed: action.bound,
             setIsForceClear: action.bound,
+            setBrushSize: action.bound,
+            setBrushColor: action.bound,
             setIsReverse: action.bound,
             dispose: action.bound,
             isHeaderCollapsed: observable,
             isDrawningBlocked: observable,
             isReverse: observable,
             isForceClear: observable,
+            brushSize: observable,
+            brushColor: observable,
             fadeWidth: observable,
         });
         enableLogging(this, LOG_KEY, LOG_TOTAL);
@@ -82,6 +90,14 @@ export class DrawningStore extends StateManagerWrapper {
         window.addEventListener("beforeunload", () => {
             this.flushChanges();
         }, false);
+    }
+
+    setBrushSize(brushSize: string) {
+        this.brushSize = brushSize;
+    }
+
+    setBrushColor(brushColor: string) {
+        this.brushColor = brushColor;
     }
 
     setIsHeaderCollapsed(isHeaderCollapsed: boolean) {

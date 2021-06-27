@@ -14,11 +14,15 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Toolbar from "@material-ui/core/Toolbar";
 import Collapse from "@material-ui/core/Collapse";
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
-import Menu from "@material-ui/icons/Menu";
+import MenuIcon from "@material-ui/icons/Menu";
 import Help from "@material-ui/icons/Help";
 import Flip from "@material-ui/icons/Flip";
 import Close from "@material-ui/icons/Close";
+import Palette from "@material-ui/icons/Palette";
+import LineWeight from "@material-ui/icons/LineWeight";
 
 import { makeStyles } from '@material-ui/core';
 
@@ -89,6 +93,8 @@ export const Scaffold = ({
 }: IScaffoldProps & IScaffoldPrivate) => {
 
     const [opened, setOpened] = useState(false);
+    const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [sizeAnchorEl, setSizeAnchorEl] = useState<HTMLButtonElement | null>(null);
     const classes = useStyles();
 
     const { navigate } = useRouter();
@@ -100,11 +106,37 @@ export const Scaffold = ({
         navigate(name);
     };
 
-    const { isReverse, isDrawningBlocked } = drawningStore;
+    const { isReverse, isDrawningBlocked, brushColor, brushSize } = drawningStore;
 
     const handleReverse = () => drawningStore.setIsReverse(!isReverse);
 
     const handleClear = () => drawningStore.setIsForceClear(true);
+
+    const handleColorMenuClick = ({ currentTarget }: React.SyntheticEvent<HTMLButtonElement>) => {
+        setColorAnchorEl(currentTarget);
+    };
+    
+    const handleColorMenuClose = () => {
+        setColorAnchorEl(null);
+    };
+
+    const handleSizeMenuClick = ({ currentTarget }: React.SyntheticEvent<HTMLButtonElement>) => {
+        setSizeAnchorEl(currentTarget);
+    };
+    
+    const handleSizeMenuClose = () => {
+        setSizeAnchorEl(null);
+    };
+
+    const createHandleSizeMenuChoose = (size: string) => () => {
+        drawningStore.setBrushSize(size);
+        handleSizeMenuClose();
+    };
+
+    const createHandleColorMenuChoose = (color: string) => () => {
+        drawningStore.setBrushColor(color);
+        handleColorMenuClose();
+    };
 
     return (
         <div 
@@ -150,9 +182,47 @@ export const Scaffold = ({
                         color="inherit"
                         onClick={handleMenuToggle}
                     >
-                        <Menu />
+                        <MenuIcon />
                     </IconButton>
                     <div className={classes.stretch} />
+                    <IconButton
+                        color="inherit"
+                        aria-controls="color-menu"
+                        aria-haspopup="true"
+                        onClick={handleColorMenuClick}
+                    >
+                        <Palette />
+                    </IconButton>
+                    <Menu
+                        id="color-menu"
+                        anchorEl={colorAnchorEl}
+                        keepMounted
+                        open={!!colorAnchorEl}
+                        onClose={handleColorMenuClose}
+                    >
+                        <MenuItem disabled={brushColor === 'red'} onClick={createHandleColorMenuChoose('red')}>Red</MenuItem>
+                        <MenuItem disabled={brushColor === 'green'} onClick={createHandleColorMenuChoose('green')}>Green</MenuItem>
+                        <MenuItem disabled={brushColor === 'blue'} onClick={createHandleColorMenuChoose('blue')}>Blue</MenuItem>
+                    </Menu>
+                    <IconButton
+                        color="inherit"
+                        aria-controls="size-menu"
+                        aria-haspopup="true"
+                        onClick={handleSizeMenuClick}
+                    >
+                        <LineWeight />
+                    </IconButton>
+                    <Menu
+                        id="size-menu"
+                        anchorEl={sizeAnchorEl}
+                        keepMounted
+                        open={!!sizeAnchorEl}
+                        onClose={handleSizeMenuClose}
+                    >
+                        <MenuItem disabled={brushSize === 'small'} onClick={createHandleSizeMenuChoose('small')}>Small</MenuItem>
+                        <MenuItem disabled={brushSize === 'medium'} onClick={createHandleSizeMenuChoose('medium')}>Medium</MenuItem>
+                        <MenuItem disabled={brushSize === 'high'} onClick={createHandleSizeMenuChoose('high')}>High</MenuItem>
+                    </Menu>
                     <IconButton
                         color="inherit"
                         disabled={isDrawningBlocked}
