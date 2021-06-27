@@ -50,21 +50,24 @@ export class DrawningStore extends StateManagerWrapper {
      * и не сбрасываются при переключении между
      * страницами
      */
-    public fadeWidth = '120';
+    public fadeWidth = '300';
 
     /**
      * Параметры. Динамично меняются при переходе
      * между страницами и сбрасываются в dispose
      */
     public isHeaderCollapsed = false;
+    public isDrawningBlocked = false;
 
     constructor() {
         super();
         makeObservable(this, {
             setFadeWidth: action.bound,
+            setIsDrawningBlocked: action.bound,
             setIsHeaderCollapsed: action.bound,
             dispose: action.bound,
             isHeaderCollapsed: observable,
+            isDrawningBlocked: observable,
             fadeWidth: observable,
         });
         enableLogging(this, LOG_KEY, LOG_TOTAL);
@@ -75,12 +78,17 @@ export class DrawningStore extends StateManagerWrapper {
         this.isHeaderCollapsed = isHeaderCollapsed;
     }
 
+    setIsDrawningBlocked(isDrawningBlocked: boolean) {
+        this.isDrawningBlocked = isDrawningBlocked;
+    }
+
     setFadeWidth(fadeWidth: string) {
         this.fadeWidth = fadeWidth;
     }
 
     dispose() {
         this.isHeaderCollapsed = false;
+        this.isDrawningBlocked = false;
         this.flushChanges();
     }
 }

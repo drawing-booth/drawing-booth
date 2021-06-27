@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import { inject, observer } from "mobx-react";
-import compose from "compose-function";
-
 import { useSnackbar } from 'notistack';
 
 import {
@@ -16,6 +13,9 @@ import Container from '@material-ui/core/Container';
 
 import Breadcrumbs from '../../components/common/Breadcrumbs';
 import Spacer from './Spacer';
+
+import { inject, observer } from "mobx-react";
+import compose from "compose-function";
 
 import DrawningStore from '../../store/DrawningStore';
 
