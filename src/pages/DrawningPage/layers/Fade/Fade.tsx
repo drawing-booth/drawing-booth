@@ -42,7 +42,7 @@ export const Fade = ({
 }: IFadeProps & IFadePrivate) => {
     const classes = useStyles();
 
-    const { fadeWidth } = drawningStore;
+    const { fadeWidth, isDrawningBlocked } = drawningStore;
 
     return (
         <AutoSizer className={classes.root} target={document.body}>
@@ -54,10 +54,12 @@ export const Fade = ({
                     className={classes.container}
                     style={{ height, width }}
                 >
-                    <div
-                        className={classes.fade}
-                        style={{ height, width: `${fadeWidth}px` }}
-                    />
+                    {!isDrawningBlocked && (
+                        <div
+                            className={classes.fade}
+                            style={{ height, width: `${fadeWidth}px` }}
+                        />
+                    )}
                 </div>
             )}
         </AutoSizer>

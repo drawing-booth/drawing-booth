@@ -60,6 +60,7 @@ export class DrawningStore extends StateManagerWrapper {
      */
     public isHeaderCollapsed = false;
     public isDrawningBlocked = false;
+    public isForceClear = false;
 
     constructor() {
         super();
@@ -67,11 +68,13 @@ export class DrawningStore extends StateManagerWrapper {
             setFadeWidth: action.bound,
             setIsDrawningBlocked: action.bound,
             setIsHeaderCollapsed: action.bound,
+            setIsForceClear: action.bound,
             setIsReverse: action.bound,
             dispose: action.bound,
             isHeaderCollapsed: observable,
             isDrawningBlocked: observable,
             isReverse: observable,
+            isForceClear: observable,
             fadeWidth: observable,
         });
         enableLogging(this, LOG_KEY, LOG_TOTAL);
@@ -91,6 +94,10 @@ export class DrawningStore extends StateManagerWrapper {
 
     setIsReverse(isReverse: boolean) {
         this.isReverse = isReverse;
+    }
+
+    setIsForceClear(isForceClear: boolean) {
+        this.isForceClear = isForceClear;
     }
 
     setFadeWidth(fadeWidth: string) {

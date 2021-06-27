@@ -18,6 +18,7 @@ import Collapse from "@material-ui/core/Collapse";
 import Menu from "@material-ui/icons/Menu";
 import Help from "@material-ui/icons/Help";
 import Flip from "@material-ui/icons/Flip";
+import Close from "@material-ui/icons/Close";
 
 import { makeStyles } from '@material-ui/core';
 
@@ -99,9 +100,11 @@ export const Scaffold = ({
         navigate(name);
     };
 
-    const reverse = drawningStore.isReverse;
+    const { isReverse, isDrawningBlocked } = drawningStore;
 
-    const handleReverse = () => drawningStore.setIsReverse(!reverse);
+    const handleReverse = () => drawningStore.setIsReverse(!isReverse);
+
+    const handleClear = () => drawningStore.setIsForceClear(true);
 
     return (
         <div 
@@ -152,6 +155,14 @@ export const Scaffold = ({
                     <div className={classes.stretch} />
                     <IconButton
                         color="inherit"
+                        disabled={isDrawningBlocked}
+                        onClick={handleClear}
+                    >
+                        <Close />
+                    </IconButton>
+                    <IconButton
+                        color="inherit"
+                        disabled={isDrawningBlocked}
                         onClick={handleReverse}
                     >
                         <Flip />
