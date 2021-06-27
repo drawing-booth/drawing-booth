@@ -28,7 +28,12 @@ import compose from "compose-function";
 import DrawningStore from '../../../store/DrawningStore';
 
 const useStyles = makeStyles((theme) => ({
-    root: {},
+    root: {
+        zIndex: 999,
+        '& header.MuiPaper-root': {
+            transition: `background 250ms`,
+        },
+    },
     noHeaderElevation: {
         '& header.MuiPaper-root': {
             boxShadow: 'none',
