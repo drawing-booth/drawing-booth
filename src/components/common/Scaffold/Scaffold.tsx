@@ -17,6 +17,7 @@ import Collapse from "@material-ui/core/Collapse";
 
 import Menu from "@material-ui/icons/Menu";
 import Help from "@material-ui/icons/Help";
+import Flip from "@material-ui/icons/Flip";
 
 import { makeStyles } from '@material-ui/core';
 
@@ -98,6 +99,10 @@ export const Scaffold = ({
         navigate(name);
     };
 
+    const reverse = drawningStore.isReverse;
+
+    const handleReverse = () => drawningStore.setIsReverse(!reverse);
+
     return (
         <div 
             className={classNames(classes.root, {
@@ -145,6 +150,12 @@ export const Scaffold = ({
                         <Menu />
                     </IconButton>
                     <div className={classes.stretch} />
+                    <IconButton
+                        color="inherit"
+                        onClick={handleReverse}
+                    >
+                        <Flip />
+                    </IconButton>
                     <IconButton
                         color="inherit"
                         onClick={handleHelpClick}

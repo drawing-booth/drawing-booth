@@ -7,6 +7,7 @@ const STORAGE_KEY = "BOOTH_LAST_STATE";
 
 const STORAGE_FIELDS: string[] = [
     "fadeWidth",
+    "isReverse",
 ];
 
 const LOG_KEY = "BOOTH_DRAWNING";
@@ -51,6 +52,7 @@ export class DrawningStore extends StateManagerWrapper {
      * страницами
      */
     public fadeWidth = '300';
+    public isReverse = false;
 
     /**
      * Параметры. Динамично меняются при переходе
@@ -65,9 +67,11 @@ export class DrawningStore extends StateManagerWrapper {
             setFadeWidth: action.bound,
             setIsDrawningBlocked: action.bound,
             setIsHeaderCollapsed: action.bound,
+            setIsReverse: action.bound,
             dispose: action.bound,
             isHeaderCollapsed: observable,
             isDrawningBlocked: observable,
+            isReverse: observable,
             fadeWidth: observable,
         });
         enableLogging(this, LOG_KEY, LOG_TOTAL);
@@ -80,6 +84,10 @@ export class DrawningStore extends StateManagerWrapper {
 
     setIsDrawningBlocked(isDrawningBlocked: boolean) {
         this.isDrawningBlocked = isDrawningBlocked;
+    }
+
+    setIsReverse(isReverse: boolean) {
+        this.isReverse = isReverse;
     }
 
     setFadeWidth(fadeWidth: string) {

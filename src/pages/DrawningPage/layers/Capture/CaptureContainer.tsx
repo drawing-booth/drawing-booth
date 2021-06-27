@@ -6,6 +6,7 @@ import { useRef, useState, useEffect } from 'react';
 import PermissionDenied from './PermissionDenied';
 
 import { inject, observer } from "mobx-react";
+import { autorun } from 'mobx';
 import compose from "compose-function";
 
 import DrawningStore from '../../../../store/DrawningStore';
@@ -13,7 +14,6 @@ import DrawningStore from '../../../../store/DrawningStore';
 interface ICaptureContainerProps {
     height: number;
     width: number;
-    reverse?: boolean;
 }
 
 interface ICaptureContainerPrivate {
@@ -27,12 +27,27 @@ const useStyles = makeStyles({
 export const CaptureContainer = ({
     height,
     width,
-    reverse,
     drawningStore,
 }: ICaptureContainerProps & ICaptureContainerPrivate) => {
     const elementRef = useRef<HTMLCanvasElement>(null);
+    const contextRef: React.MutableRefObject<CanvasRenderingContext2D> = useRef<CanvasRenderingContext2D>(null as never);
     const [permissionDenied, setPermissionDenied] = useState(false);
+    const [reverse, setReverse] = useState(drawningStore.isReverse);
     const classes = useStyles();
+
+    useEffect(() => {
+        const dispose = autorun(() => {
+            const { current: ctx } = contextRef;
+            if (drawningStore.isReverse !== reverse) {
+                if (ctx) {
+                    ctx.translate(width, 0);
+                    ctx.scale(-1, 1);
+                }
+                setReverse(drawningStore.isReverse);
+            }
+        });
+        return () => dispose();
+    }, [height, width, reverse]);
 
     useEffect(() => {
 
@@ -59,13 +74,10 @@ export const CaptureContainer = ({
                     });
 
                     const ctx = canvas.getContext('2d')!;
-
-                    if (reverse) {
-                        ctx.translate(width, 0)
-                        ctx.scale(-1, 1)
-                    }
+                    contextRef.current = ctx;
 
                     const loop = () => {
+                        console.log('loop')
                         if (stream.active) {
                             ctx.clearRect(0, 0, width, height);
                             ctx.drawImage(video, 0, 0, width, height);
@@ -91,7 +103,7 @@ export const CaptureContainer = ({
                 cancelAnimationFrame(animationFrame);
             }
         }
-    }, [height, width, reverse]);
+    }, [height, width]);
 
     return !permissionDenied ? (
         <canvas
