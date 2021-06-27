@@ -189,6 +189,7 @@ export const Scaffold = ({
                         color="inherit"
                         aria-controls="color-menu"
                         aria-haspopup="true"
+                        style={{color: brushColor || 'white'}}
                         onClick={handleColorMenuClick}
                     >
                         <Palette />

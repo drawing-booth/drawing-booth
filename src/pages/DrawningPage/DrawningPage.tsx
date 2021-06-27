@@ -9,6 +9,7 @@ import DrawningStore from '../../store/DrawningStore';
 
 import Capture from './layers/Capture';
 import Fade from './layers/Fade';
+import Drawning from './layers/Drawning';
 
 interface IDrawningPageProps {
     drawningStore: DrawningStore;
@@ -36,6 +37,7 @@ export const DrawningPage = ({
         <div className={classes.root}>
             <Capture />
             <Fade />
+            <Drawning />
         </div>
     )
 };
