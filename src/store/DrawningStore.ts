@@ -53,7 +53,7 @@ export class DrawningStore extends StateManagerWrapper {
      * и не сбрасываются при переключении между
      * страницами
      */
-    public fadeWidth = '450';
+    public fadeWidth = '650';
     public isReverse = false;
     public brushSize = 'small';
     public brushColor = 'green';

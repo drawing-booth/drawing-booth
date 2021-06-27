@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRouter } from 'react-router5';
-import { useState, createElement } from "react";
+import { useState, useEffect, createElement } from "react";
 
 import classNames from 'classnames';
 
@@ -23,6 +23,8 @@ import Flip from "@material-ui/icons/Flip";
 import Close from "@material-ui/icons/Close";
 import Palette from "@material-ui/icons/Palette";
 import LineWeight from "@material-ui/icons/LineWeight";
+import Fullscreen from "@material-ui/icons/Fullscreen";
+import FullscreenExit from "@material-ui/icons/FullscreenExit";
 
 import { makeStyles } from '@material-ui/core';
 
@@ -95,7 +97,18 @@ export const Scaffold = ({
     const [opened, setOpened] = useState(false);
     const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [sizeAnchorEl, setSizeAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [inFullscreen, setFullscreen] = useState<boolean>(false);
     const classes = useStyles();
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const current = document.fullscreenElement !== null;
+            if (inFullscreen !== current) {
+                setFullscreen(current);
+            }
+        }, 1_000);
+        return () => clearInterval(interval);
+    }, [inFullscreen]);
 
     const { navigate } = useRouter();
 
@@ -115,7 +128,15 @@ export const Scaffold = ({
     const handleColorMenuClick = ({ currentTarget }: React.SyntheticEvent<HTMLButtonElement>) => {
         setColorAnchorEl(currentTarget);
     };
-    
+
+    const handleFullscreen = () => {
+        if (inFullscreen) {
+            document.exitFullscreen();
+        } else {
+            document.documentElement.requestFullscreen();
+        }
+    };
+
     const handleColorMenuClose = () => {
         setColorAnchorEl(null);
     };
@@ -187,8 +208,15 @@ export const Scaffold = ({
                     <div className={classes.stretch} />
                     <IconButton
                         color="inherit"
+                        onClick={handleFullscreen}
+                    >
+                        {inFullscreen ? <FullscreenExit /> : <Fullscreen />}
+                    </IconButton>
+                    <IconButton
+                        color="inherit"
                         aria-controls="color-menu"
                         aria-haspopup="true"
+                        disabled={isDrawningBlocked}
                         style={{color: brushColor || 'white'}}
                         onClick={handleColorMenuClick}
                     >
@@ -209,6 +237,7 @@ export const Scaffold = ({
                         color="inherit"
                         aria-controls="size-menu"
                         aria-haspopup="true"
+                        disabled={isDrawningBlocked}
                         onClick={handleSizeMenuClick}
                     >
                         <LineWeight />

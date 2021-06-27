@@ -51,7 +51,11 @@ export const CaptureContainer = ({
             const { current: canvas } = elementRef;
             if (canvas) {
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { 
+                        facingMode: 'user',
+                        width: { min: 0, max: width },
+                        height: { min: 0, max: height },
+                    }});
 
                     const video = document.createElement('video');
                     video.setAttribute('height', height.toString());
