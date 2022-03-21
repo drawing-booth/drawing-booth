@@ -59,7 +59,8 @@ export const CaptureContainer = ({
 
                     const video = document.createElement('video');
                     video.setAttribute('height', height.toString());
-                    video.setAttribute('width', width.toString()); 
+                    video.setAttribute('width', width.toString());
+                    video.setAttribute('playsinline', '');
                     video.style.objectFit = 'cover';
 
                     video.srcObject = stream;
